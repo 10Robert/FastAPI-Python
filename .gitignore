@@ -1,0 +1,3 @@
+venv/
+TodoApp/*.todos.db
+TodoApp/*.todos
