@@ -5,11 +5,14 @@ from models import Todos
 from database import engine, SessionLocal
 from typing import Annotated
 from pydantic import BaseModel, Field
+from routers import auth
 
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
+
+app.include_router(auth.router)
 
 class TodoRequest(BaseModel):
     title: str = Field(min_length=3, max_length=100)
