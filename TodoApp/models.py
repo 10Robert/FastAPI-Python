@@ -1,7 +1,20 @@
+import email
 from pydoc import describe
 from turtle import title
 from database import Base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+
+class Users(Base):
+    __tablename__: str = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True)
+    username = Column(String, unique=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    hashed_password = Column()
+    is_active = Column(Boolean, default=False)
+    role = Column(String)
+
 
 class Todos(Base):
     __tablename__ = "todos"
@@ -11,3 +24,4 @@ class Todos(Base):
     description = Column(String)
     priority = Column(Integer)
     complete = Column(Boolean, default=False)
+    owner_id = Column(Integer, ForeignKey("users.id")) 
