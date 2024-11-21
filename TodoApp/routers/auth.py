@@ -1,8 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from email.policy import HTTP
-from secrets import token_bytes
 import bcrypt
-from click import Option
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -62,7 +59,7 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-def authenticate_user(username: str, password: str, db) -> bool:
+def authenticate_user(username: str, password: str, db) :
     user = db.query(Users).filter(Users.username == username).first()
     if not user:
         return False
