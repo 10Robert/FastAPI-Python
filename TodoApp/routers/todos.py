@@ -1,30 +1,13 @@
-from typing import Annotated
-from pydantic import BaseModel, Field
-from sqlalchemy.orm import Session
-from fastapi import Depends, APIRouter, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path
 from starlette import status
 from models import Todos
-from database import SessionLocal
-from .auth import get_current_user
+from database import db_dependency
+from utils.crud import user_dependency
+from schemas.schema import TodoRequest
 
 router = APIRouter()
 
-class TodoRequest(BaseModel):
-    title: str = Field(min_length=3, max_length=100)
-    description: str = Field(min_length=3, max_length=100)
-    priority: int = Field(gt=0, lt=6)
-    complete: bool 
 
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
-
-db_dependency = Annotated[Session, Depends(get_db)]
-user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def read_all_todo_user(user: user_dependency, db: db_dependency):
