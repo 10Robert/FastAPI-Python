@@ -6,7 +6,7 @@ from typing import Annotated
 from jose import JWTError, jwt
 from datetime import datetime, timezone, timedelta
 import json
-from models import Users
+from ..models import Users
 from sqlalchemy.exc import SQLAlchemyError
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')

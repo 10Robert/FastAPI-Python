@@ -2,3 +2,4 @@ venv/
 TodoApp/*.todos.db
 TodoApp/*.todos
 anotacoes.txt
+TodoApp/test/*test_example

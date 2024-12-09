@@ -1,7 +1,4 @@
-import email
-from pydoc import describe
-from turtle import title
-from database import Base
+from .database import Base
 from sqlalchemy import Column, Float, Integer, String, Boolean, ForeignKey
 
 

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Path
 from starlette import status
-from models import Todos, Users
-from database import db_dependency
-from utils.crud import user_dependency
+from ..models import Todos, Users
+from ..database import db_dependency
+from ..utils.crud import user_dependency
 
 router = APIRouter(
     prefix="/admin",

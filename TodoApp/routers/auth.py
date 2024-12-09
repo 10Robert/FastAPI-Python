@@ -1,14 +1,13 @@
-from datetime import datetime, timezone, timedelta
-from locale import strcoll
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, Path, dependencies
 from sqlalchemy.exc import SQLAlchemyError
-from models import Users
+from ..models import Users
 from starlette import status
 from typing import Annotated
-from database import db_dependency
+from ..database import db_dependency
 from fastapi.security import OAuth2PasswordRequestForm
-from schemas.schema import CreateUserRequest, PartialUpdateUserRequest, Token
-from utils.crud import bcrypt_context, create_acess_token, authenticate_user, alter_user, user_dependency, create_users
+from ..schemas.schema import CreateUserRequest, PartialUpdateUserRequest, Token
+from ..utils.crud import bcrypt_context, create_acess_token, authenticate_user, alter_user, user_dependency, create_users
 
 router = APIRouter(
     prefix="/auth",

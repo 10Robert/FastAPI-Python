@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from models import Users
+from ..models import Users
 from starlette import status
-from database import db_dependency
-from utils.crud import user_dependency
-from schemas.schema import UserVerification
+from ..database import db_dependency
+from ..utils.crud import user_dependency
+from ..schemas.schema import UserVerification
 
 router = APIRouter(
     prefix="/user",
