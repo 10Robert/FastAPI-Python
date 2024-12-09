@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
-from fastapi import APIRouter, Depends, HTTPException, Path
+from locale import strcoll
+from fastapi import APIRouter, Depends, HTTPException, Path, dependencies
 from sqlalchemy.exc import SQLAlchemyError
 from models import Users
 from starlette import status
@@ -39,7 +40,7 @@ async def read_all_users(db: db_dependency):
         if users:
             return users
         else:
-            raise HTTPException(status_code=status.HTPP_404_NOT_FOUND, detail="Users not found.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Users not found.")
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error.")
     
@@ -58,9 +59,9 @@ async def delete_user(db: db_dependency,
     
 @router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_user(db: db_dependency,
-                      user_request: CreateUserRequest, user_id: int):
+                      user_request: CreateUserRequest, user_id: int) -> None:
     alter_user(db, user_request, user_id)
-    return db.query(Users).filter(Users.id == user_id).first()  
+     
       
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -75,7 +76,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 @router.patch('/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def partial_update_user(db: db_dependency,
                          user_request: PartialUpdateUserRequest,
-                         user_id: int = Path(gt=0)):
+                         user_id: int = Path(gt=0)) -> None:
     try:
         user_model = db.query(Users).filter(Users.id == user_id).first()
         if user_model:
@@ -88,6 +89,24 @@ async def partial_update_user(db: db_dependency,
                 user_model.hashed_password = user_model.hashed_password
             else:
                 user_model.hashed_password = bcrypt_context.hash(user_request.password)# type: ignore
+        else:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
+    
+    db.add(user_model)
+    db.commit()
+
+@router.patch("/phonenumber/{phone_number}", status_code=status.HTTP_204_NO_CONTENT)
+async def alter_phone_number(db: db_dependency, user: user_dependency) -> None:
+
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
+    
+    try:
+        user_model = db.query(Users).filter(Users.id == user.get("id")).first()
+        if user_model:
+            user_model.phone_number = phone_number #type: ignore
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
     except SQLAlchemyError as e:

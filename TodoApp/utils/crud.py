@@ -58,7 +58,7 @@ def alter_user(db, user_request, user_id):
             user.last_name = user_request.last_name # type: ignore
             user.role = user_request.role # type: ignore
             user.hashed_password = bcrypt_context.hash(user_request.password) # type: ignore
-
+            user.phone_number = user_request.phone_number
             db.add(user)
             db.commit()
         else:
@@ -74,7 +74,8 @@ def create_users(db, create_user_request):
         last_name = create_user_request.last_name,
         role = create_user_request.role,
         hashed_password = bcrypt_context.hash(create_user_request.password),
-        is_active = True
+        is_active = True,
+        phone_number = create_user_request.phone_number
     )
     db.add(create_user_model)
     db.commit()

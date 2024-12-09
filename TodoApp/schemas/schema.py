@@ -8,6 +8,7 @@ class CreateUserRequest(BaseModel):
     last_name: str
     password: str
     role: str
+    phone_number: str
 
 class PartialUpdateUserRequest(BaseModel):
     username: Optional[str] | None = None
@@ -16,8 +17,7 @@ class PartialUpdateUserRequest(BaseModel):
     last_name: Optional[str] | None = None
     password: Optional[str] | None = None
     role: Optional[str] | None = None
-
-
+    phone_number: Optional[str] | None = None
 
 class Token(BaseModel):
     access_token: str
