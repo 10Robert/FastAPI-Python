@@ -6,8 +6,11 @@ from typing import Annotated
 from jose import JWTError, jwt
 from datetime import datetime, timezone, timedelta
 import json
+
+from TodoApp.schemas.schema import CreateUserRequest, PartialUpdateUserRequest, UpdateUserValuesType
 from ..models import Users
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -48,7 +51,7 @@ def create_acess_token(username: str, user_id: int, role: str, expires_delta: ti
     encode.update({"ext": expires})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def alter_user(db, user_request, user_id):
+def alter_user(db, user_request, user_id: int):
     try:
         user = db.query(Users).filter(Users.id == user_id).first()
         if user:
@@ -63,6 +66,7 @@ def alter_user(db, user_request, user_id):
             db.commit()
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    # excluir do codigo Classe HTTPException deve ser utilizada para erros de client
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
 
@@ -79,3 +83,8 @@ def create_users(db, create_user_request):
     )
     db.add(create_user_model)
     db.commit()
+
+def retrieve_user(db: Session, user_id: int):
+    return db.query(Users).filter(Users.id == user_id)
+
+

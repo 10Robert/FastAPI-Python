@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, Path, dependencies
+from fastapi import APIRouter, Depends, HTTPException, Path   
 from sqlalchemy.exc import SQLAlchemyError
 from ..models import Users
 from starlette import status
@@ -113,3 +113,5 @@ async def alter_phone_number(db: db_dependency, user: user_dependency) -> None:
     
     db.add(user_model)
     db.commit()
+
+

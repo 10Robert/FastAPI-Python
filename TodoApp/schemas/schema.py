@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Dict, List, Union
+
+
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -9,15 +11,16 @@ class CreateUserRequest(BaseModel):
     password: str
     role: str
     phone_number: str
+    user_id: int
 
 class PartialUpdateUserRequest(BaseModel):
     username: Optional[str] | None = None
     email: Optional[str] | None = None
     first_name: Optional[str] | None = None
     last_name: Optional[str] | None = None
-    password: Optional[str] | None = None
     role: Optional[str] | None = None
     phone_number: Optional[str] | None = None
+    password: Optional[str] | None = None
 
 class Token(BaseModel):
     access_token: str
@@ -33,3 +36,8 @@ class TodoRequest(BaseModel):
     description: str = Field(min_length=3, max_length=100)
     priority: int = Field(gt=0, lt=6)
     complete: bool 
+
+UserType = Dict[str, Union[int, str]]
+userListType = List[UserType]
+
+UpdateUserValuesType = Dict[str, Union[int, str]]
