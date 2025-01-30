@@ -1,7 +1,7 @@
 from ..utils.crud import get_current_user
 from .utils import *
 from ..database import get_db
-from starlette import status
+from fastapi import status
 from sqlalchemy.orm import Session
 
 app.dependency_overrides[get_db] = override_get_db
@@ -13,7 +13,7 @@ def test_admin_read_all_authenticated(test_todo):
     assert response.json() == [{'id': 1, 'priority': 5, 'owner_id': 1, 'complete': False, 
                                 'description': 'Need to learn everday!', 'title': 'learn to code!'}]
 
-def test_delete_todo_admin(test_todo) -> None:
+def test_admin_delete_todo(test_todo) -> None:
     response = client.delete("/todo/1")
     assert response.status_code == status.HTTP_204_NO_CONTENT
     db: Session = TestingSessionLocal()
