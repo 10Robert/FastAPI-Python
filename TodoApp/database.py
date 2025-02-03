@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 
 
-SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://postgres:39366856@localhost/TodoApplicationDatabase'
+SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://postgres:91154310@localhost/TodoApplicationDatabase'
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

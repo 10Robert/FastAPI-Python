@@ -8,6 +8,7 @@ from ..database import db_dependency
 from fastapi.security import OAuth2PasswordRequestForm
 from ..schemas.schema import CreateUserRequest, PartialUpdateUserRequest, Token
 from ..utils.crud import bcrypt_context, create_acess_token, authenticate_user, alter_user, user_dependency, create_users
+from fastapi.responses import ORJSONResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -15,12 +16,13 @@ router = APIRouter(
 )
 
 
+
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(  db: db_dependency,
                         create_user_request: CreateUserRequest):
     create_users(db, create_user_request)
  
-@router.get("/{user_id}", status_code=status.HTTP_200_OK)
+@router.get("/{user_id}", status_code=status.HTTP_200_OK, response_class=ORJSONResponse)
 async def read_by_user(db: db_dependency, user_id: int = Path(gt=0)):
     try:
         user = db.query(Users).filter(Users.id == user_id).first()
@@ -32,7 +34,7 @@ async def read_by_user(db: db_dependency, user_id: int = Path(gt=0)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error.")
     
     
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK, response_class=ORJSONResponse)
 async def read_all_users(db: db_dependency):
     try:
         users = db.query(Users).all()
@@ -56,7 +58,7 @@ async def delete_user(db: db_dependency,
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error.")
     
-@router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, response_class=ORJSONResponse)
 async def update_user(db: db_dependency,
                       user_request: CreateUserRequest, user_id: int) -> None:
     alter_user(db, user_request, user_id)
@@ -72,7 +74,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     return {"access_token": token, "token_type": "bearer"}
 
 
-@router.patch('/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.patch('/{user_id}', status_code=status.HTTP_204_NO_CONTENT, response_class=ORJSONResponse)
 async def partial_update_user(db: db_dependency,
                          user_request: PartialUpdateUserRequest,
                          user_id: int = Path(gt=0)) -> None:
@@ -96,7 +98,7 @@ async def partial_update_user(db: db_dependency,
     db.add(user_model)
     db.commit()
 
-@router.patch("/phonenumber/{phone_number}", status_code=status.HTTP_204_NO_CONTENT)
+@router.patch("/phonenumber/{phone_number}", status_code=status.HTTP_204_NO_CONTENT, response_class=ORJSONResponse)
 async def alter_phone_number(db: db_dependency, user: user_dependency) -> None:
 
     if user is None:

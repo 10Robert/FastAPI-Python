@@ -4,18 +4,19 @@ from ..models import Todos
 from ..database import db_dependency
 from ..utils.crud import user_dependency
 from ..schemas.schema import TodoRequest
+from fastapi.responses import ORJSONResponse
 
 router = APIRouter()
 
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK, response_class=ORJSONResponse)
 async def read_all_todo_user(user: user_dependency, db: db_dependency):
     if user is None:
         HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
     return db.query(Todos).filter(Todos.owner_id == user.get("id")).all()
 
-@router.get("/todo/{todo_id}", status_code=status.HTTP_200_OK)
+@router.get("/todo/{todo_id}", status_code=status.HTTP_200_OK, response_class=ORJSONResponse)
 async def read_todo(user: user_dependency, db: db_dependency, 
                     todo_id:int = Path(gt=0)):
     if user is None:

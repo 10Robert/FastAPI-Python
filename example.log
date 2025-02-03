@@ -1,0 +1,10 @@
+INFO:my_logger:Request: GET http://localhost:8000/auth/
+INFO:my_logger:Response status: 200
+INFO:my_logger:Request: GET http://localhost:8000/auth/
+INFO:my_logger:Response status: 200
+INFO:my_logger:Request: GET http://localhost:8000/auth/
+INFO:my_logger:Response status: 200
+INFO:my_logger:Request: GET http://localhost:8000/auth/
+INFO:my_logger:Response status: 200
+INFO:my_logger:Request: GET http://localhost:8000/auth/
+INFO:my_logger:Response status: 200

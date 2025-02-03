@@ -3,6 +3,7 @@ from starlette import status
 from ..models import Todos
 from ..database import db_dependency
 from ..utils.crud import user_dependency
+from fastapi.responses import ORJSONResponse
 
 router = APIRouter(
     prefix="/admin",
@@ -10,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.get("/todo", status_code=status.HTTP_200_OK)
+@router.get("/todo", status_code=status.HTTP_200_OK, response_class=ORJSONResponse)
 async def read_all(user: user_dependency, db: db_dependency):
     if user is None or user.get('role') != "admin":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
