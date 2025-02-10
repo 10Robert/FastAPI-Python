@@ -1,4 +1,3 @@
-from httpx import request
 from sqlalchemy.orm.session import Session
 from starlette import status
 from TodoApp.utils.crud import get_current_user

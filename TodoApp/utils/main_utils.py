@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse, PlainTextResponse
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from fastapi import Request, status, HTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi import Request, status
 import time
 import logging
 from starlette.responses import Response
@@ -23,7 +23,7 @@ class RatelimitMiddleware(BaseHTTPMiddleware):
             self.requests[client_ip] = []
 
         self.requests[client_ip] = [timestamp for timestamp in self.requests[client_ip] if timestamp > current_time - self.window]
-
+        print(self.requests) #type: ignore 
         if len(self.requests[client_ip]) >= self.max_requests:
             return JSONResponse(status_code=status.HTTP_429_TOO_MANY_REQUESTS, content={"error": "Too many requests"})
         
